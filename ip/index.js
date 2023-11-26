@@ -1,4 +1,5 @@
 //axios import buraya gelecek
+import axios from 'axios'
 
 var benimIP;
 
@@ -70,3 +71,56 @@ async function ipAdresimiAl(){
 
 
 //kodlar buraya gelecek
+
+const GetData = async () => {
+	await ipAdresimiAl();
+
+	var url = `https://apis.ergineer.com/ipgeoapi/${benimIP}`
+	axios.get(url)
+		.then((response) => {
+		console.log(response.data);
+		CreateDOM(response.data);
+		})
+		.catch((reject) => {
+		console.log(reject.data);
+		});
+}
+
+GetData();
+
+
+function CreateDOM(data){
+	const div = document.createElement('div');
+	const cardInfoDiv = document.createElement('div');
+	const img = document.createElement('img');
+	const h3 = document.createElement('h3');
+	const pArr = new Array();
+
+	cardInfoDiv.append(h3);
+
+	for(let i = 0; i < 6; i++){
+		pArr.push(document.createElement('p'));
+		cardInfoDiv.append(pArr[i]);
+	}
+
+	document.children[0].children[1].querySelector('.cards').append(div);
+	div.classList.add("card");
+	cardInfoDiv.classList.add("card-info");
+	pArr[0].classList.add("ulke");
+	h3.classList.add("ip");
+
+	div.append(img);
+	div.append(cardInfoDiv);
+	
+
+	img.setAttribute("src", data["ülkebayrağı"]);
+	h3.textContent = data["sorgu"];
+	pArr[0].textContent = data["ülke"] + data["ülkeKodu"];
+	pArr[1].textContent = "Enlem: " + data["enlem"] + " Boylam: " + data["boylam"];
+	pArr[2].textContent = "Şehir: " + data["şehir"];
+	pArr[3].textContent = "Saat dilimi: " + data["saatdilimi"];
+	pArr[4].textContent = "Para birimi: " + data["parabirimi"];
+	pArr[5].textContent = "ISP:" + data["isp"];
+
+}
+
